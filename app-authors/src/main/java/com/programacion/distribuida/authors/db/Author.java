@@ -1,6 +1,5 @@
 package com.programacion.distribuida.authors.db;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +15,6 @@ public class Author  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String surname;
-    private Integer version;
+
+
 }
