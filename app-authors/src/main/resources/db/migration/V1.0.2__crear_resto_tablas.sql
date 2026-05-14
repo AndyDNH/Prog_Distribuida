@@ -1,20 +1,35 @@
 -- TABLAS DEL MÓDULO app-books
-CREATE TABLE book (
-                      isbn VARCHAR(255) NOT NULL,
-                      title VARCHAR(255),
-                      price DOUBLE PRECISION,
-                      version INTEGER,
-                      CONSTRAINT pk_book PRIMARY KEY (isbn)
+CREATE TABLE books_authors
+(
+    book_isbn  VARCHAR(255) NOT NULL,
+    authors_id INTEGER      NOT NULL,
+    CONSTRAINT pk_books_authors PRIMARY KEY (book_isbn, authors_id)
 );
 
-CREATE TABLE inventory (
-                           book_isbn VARCHAR(255) NOT NULL,
-                           sold INTEGER,
-                           supplied INTEGER,
-                           version INTEGER,
-                           CONSTRAINT pk_inventory PRIMARY KEY (book_isbn),
-                           CONSTRAINT fk_inv_book FOREIGN KEY (book_isbn) REFERENCES book(isbn)
+ALTER TABLE books_authors
+    ADD CONSTRAINT FK_BOOKS_AUTHORS_ON_AUTHORS FOREIGN KEY (authors_id) REFERENCES authors (id);
+
+
+CREATE TABLE books
+(
+    isbn    VARCHAR(255) NOT NULL,
+    version INTEGER,
+    title   VARCHAR(255),
+    price   DOUBLE PRECISION,
+    CONSTRAINT pk_books PRIMARY KEY (isbn)
 );
+
+CREATE TABLE inventory
+(
+    book_isbn VARCHAR(255) NOT NULL,
+    sold      INTEGER,
+    supplied  INTEGER,
+    version   INTEGER,
+    CONSTRAINT pk_inventory PRIMARY KEY (book_isbn)
+);
+
+ALTER TABLE inventory
+    ADD CONSTRAINT FK_INVENTORY_ON_BOOK_ISBN FOREIGN KEY (book_isbn) REFERENCES books (isbn);
 
 
 
@@ -45,5 +60,5 @@ CREATE TABLE lineitem (
                           quantity INTEGER,
                           CONSTRAINT pk_lineitem PRIMARY KEY (order_id, idx),
                           CONSTRAINT fk_li_order FOREIGN KEY (order_id) REFERENCES purchaseorder(id),
-                          CONSTRAINT fk_li_book FOREIGN KEY (book_isbn) REFERENCES book(isbn)
+                          CONSTRAINT fk_li_book FOREIGN KEY (book_isbn) REFERENCES books(isbn)
 );

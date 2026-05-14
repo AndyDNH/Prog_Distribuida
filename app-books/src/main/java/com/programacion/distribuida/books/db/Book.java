@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table
+@Table(name = "books")
 @Getter
 @Setter
 public class Book {
@@ -16,6 +16,9 @@ public class Book {
     private Integer version;
     private String title;
     private Double price;
+
+    @OneToOne(mappedBy = "book")
+    private Inventory inventory;
 
 
 }
