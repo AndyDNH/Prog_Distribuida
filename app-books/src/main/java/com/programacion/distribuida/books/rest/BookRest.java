@@ -4,35 +4,71 @@ import com.programacion.distribuida.books.clients.AuthorRestClient;
 import com.programacion.distribuida.books.db.Book;
 import com.programacion.distribuida.books.dtos.BookDTO;
 import com.programacion.distribuida.books.repo.BookRepository;
+import jakarta.inject.Inject;
+import jakarta.persistence.OneToOne;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
-import lombok.RequiredArgsConstructor;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.List;
 
 @Path("/books")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Transactional
 public class BookRest {
+
+
+    //    -----Inyeccion de dependencia por constructor
+//    el modificador final obliga a que se inicialicen en el constructor
+//    @Inject
     final BookRepository bookRepository;
+
+//    @Inject
+//    @RestClient
+    final AuthorRestClient client;
+
+
+    @Inject
+    public BookRest(BookRepository bookRepository,@RestClient AuthorRestClient client) {
+        this.bookRepository = bookRepository;
+        this.client = client;
+    }
+
+
+//    public BookRest(BookRepository bookRepository, AuthorRestClient client) {
+//        this.bookRepository = bookRepository;
+//        this.client = client;
+//    }
+
+//    @PostConstruct
+//    public void init() {
+//        client = RestClientBuilder.newBuilder()
+//                .baseUri("http://127.0.0.1:8070")
+//                .build(AuthorRestClient.class);
+//    }
 
 
     @GET
     public List<BookDTO> findAll() {
         return bookRepository.streamAll()
-                .map(it -> BookDTO.builder()
-                        .isbn(it.getIsbn())
-                        .title(it.getTitle())
-                        .price(it.getPrice())
-//                        .inventorySold(it.getInventory().getSold())
-//                        .inventorySupplied(it.getInventory().getSupplied())
-                        .build())
+                .map(book -> {
+                    // consultar los autores en http://127.0.0.1:8070
+                    var authors = client.findByBook(book.getIsbn());
+
+                    return BookDTO.builder()
+                            .isbn(book.getIsbn())
+                            .title(book.getTitle())
+                            .price(book.getPrice())
+                            .authors(authors)
+                            .inventorySold(book.getInventory() != null ? book.getInventory().getSold() : null)
+                            .inventorySupplied(book.getInventory() != null ? book.getInventory().getSupplied() : null)
+                            .build();
+                })
                 .toList();
     }
 
@@ -40,9 +76,9 @@ public class BookRest {
     @Path("/{isbn}")
     public Response findByIsbn(@PathParam("isbn") String isbn) {
 
-        AuthorRestClient client =  RestClientBuilder.newBuilder()
-                .baseUri("http://127.0.0.1:8070")
-                        .build(AuthorRestClient.class);
+//        AuthorRestClient client =  RestClientBuilder.newBuilder()
+//                .baseUri("http://127.0.0.1:8070")
+//                        .build(AuthorRestClient.class);
 
 
         return bookRepository.findByIdOptional(isbn)
@@ -54,17 +90,16 @@ public class BookRest {
 //                                    .name("Jason Mormoa")
 //                                    .build()
 //                    );
-                    var authors =  client.findByBook(isbn);
+                    var authors = client.findByBook(isbn);
                     return BookDTO.builder()
                             .isbn(book.getIsbn())
                             .title(book.getTitle())
                             .price(book.getPrice())
                             .authors(authors) // Esta variable 'authors' debe venir de una consulta previa
-//                            .inventorySold(book.getInventory().getSold())
-//                            .inventorySupplied(book.getInventory().getSupplied())
+                            .inventorySold(book.getInventory().getSold())
+                            .inventorySupplied(book.getInventory().getSupplied())
                             .build();
                 })
-
 
 
 //                .map(it -> BookDTO.builder()
@@ -78,6 +113,8 @@ public class BookRest {
                 .orElse(Response.status(Response.Status.NOT_FOUND))
                 .build();
     }
+
+
 
     @PUT
     @Path("/{isbn}")

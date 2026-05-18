@@ -23,7 +23,9 @@ public class AuthorRest {
     @ConfigProperty(name = "quarkus.http.port")
     Integer port;
 
+
     @GET
+    @Path("/all")
     public List<Author> getAll(){
         return authorsRepository.listAll();
     }
@@ -51,8 +53,12 @@ public class AuthorRest {
     @GET
     @Path("/find/{isbn}")
     public List<AuthorDto> findByBook(@PathParam("isbn") String isbn) {
+
+        System.out.println("test");
+        System.out.println(port);
         return authorsRepository.findByBook(isbn)
                 .stream()
+                .peek(it -> it.setName(it.getName() + " - " + port))
                 .map(it -> AuthorDto.builder()
                         .id(it.getId())
                         .name(it.getName())

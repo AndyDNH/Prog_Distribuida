@@ -16,4 +16,8 @@ INSERT INTO books (
       ('BK012', 3, 'Los detectives salvajes', 24.99),
       ('BK013', 2, 'Como agua para chocolate', 15.60),
       ('BK014', 1, 'La casa de los espíritus', 23.45),
-      ('BK015', 4, 'El principito', 10.99);
+
+
+INSERT into books_authors (book_isbn, authors_id) VALUES
+      ('BK001', 2),
+      ('BK002', 3)
