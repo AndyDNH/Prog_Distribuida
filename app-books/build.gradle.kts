@@ -33,8 +33,16 @@ dependencies {
     implementation("org.modelmapper:modelmapper:3.2.6")
     implementation("io.quarkus:quarkus-rest-client-jsonb")
     implementation("io.quarkus:quarkus-rest-client")
+
+//    Service Discovery
     implementation("io.quarkus:quarkus-smallrye-stork")
-    implementation("io.smallrye.stork:stork-service-discovery-static-list")
+//    implementation("io.smallrye.stork:stork-service-discovery-static-list:2.6.3")
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
+    implementation("io.smallrye.stork:stork-service-discovery-consul")
+
+
+
+
 }
 
 tasks.test {

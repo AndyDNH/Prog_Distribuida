@@ -41,6 +41,8 @@ dependencies {
     implementation("io.quarkus:quarkus-smallrye-stork")
     implementation("io.smallrye.stork:stork-service-discovery-static-list:2.6.3")
 
+    implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
+
 }
 
 tasks.test {
