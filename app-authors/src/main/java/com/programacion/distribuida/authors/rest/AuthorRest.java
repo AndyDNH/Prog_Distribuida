@@ -25,7 +25,6 @@ public class AuthorRest {
 
 
     @GET
-    @Path("/all")
     public List<Author> getAll(){
         return authorsRepository.listAll();
     }
