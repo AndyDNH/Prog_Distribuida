@@ -40,7 +40,8 @@ dependencies {
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
     implementation("io.smallrye.stork:stork-service-discovery-consul")
 
-
+//    Resiliencia
+    implementation("io.quarkus:quarkus-smallrye-fault-tolerance")
 
 
 }

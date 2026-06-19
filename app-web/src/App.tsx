@@ -12,7 +12,7 @@ interface Book {
     isbn: string;
     price: number,
     title: string;
-    author: Array<Author>;
+    authors: Array<Author>;
 }
 
 function App() {
@@ -62,7 +62,14 @@ function App() {
                     <br/>
                     {
                         books.map(book => (
-                            <p key={book.isbn}> {book.isbn} - {book.title}  </p>
+                            <ul key={book.isbn}>
+                                <li>{book.isbn} - {book.title}</li>
+                                {
+
+                                    book.authors.map(author =>
+                                        `${author.name}`)
+                                }
+                            </ul>
                         ))
                     }
                 </div>

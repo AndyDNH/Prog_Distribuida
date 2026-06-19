@@ -11,6 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriBuilder;
+import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public class BookRest {
 
 
     @GET
+//    @Retry(maxRetries = 4, delay = 200)
     public List<BookDTO> findAll() {
         return bookRepository.streamAll()
                 .map(book -> {
@@ -74,6 +76,7 @@ public class BookRest {
 
     @GET
     @Path("/{isbn}")
+//    @Retry(maxRetries = 2, delay = 200)
     public Response findByIsbn(@PathParam("isbn") String isbn) {
 
 //        AuthorRestClient client =  RestClientBuilder.newBuilder()

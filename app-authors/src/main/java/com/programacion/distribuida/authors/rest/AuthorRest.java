@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Path("/authors")
 @Produces(MediaType.APPLICATION_JSON)
@@ -49,12 +50,17 @@ public class AuthorRest {
                 .build();
     }
 
+    AtomicInteger index = new AtomicInteger(0);
+
     @GET
     @Path("/find/{isbn}")
     public List<AuthorDto> findByBook(@PathParam("isbn") String isbn) {
-
-        System.out.println("test");
-        System.out.println(port);
+        int valor = index.getAndIncrement();
+        if(valor!=5) {
+            String msg = "Intento %d -- generando error".formatted(valor);
+            System.out.println(msg);
+            throw new RuntimeException(msg);
+        }
         return authorsRepository.findByBook(isbn)
                 .stream()
                 .peek(it -> it.setName(it.getName() + " - " + port))
