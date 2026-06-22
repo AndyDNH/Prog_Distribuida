@@ -32,6 +32,7 @@ dependencies {
     implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-flyway")
+    implementation("io.quarkus:quarkus-jackson")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:12.5.0")
 
     implementation("io.quarkus:quarkus-rest-client-jsonb")
@@ -43,6 +44,8 @@ dependencies {
 
     implementation("io.smallrye.reactive:smallrye-mutiny-vertx-consul-client")
 
+//    Telemetria
+    implementation("io.quarkus:quarkus-micrometer-registry-prometheus")
 }
 
 tasks.test {
